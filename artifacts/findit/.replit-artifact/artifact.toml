@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "FindIt Lost & Found"
+description = "A mobile-friendly lost-and-found app that lets people report lost and found items, see potential matches, verify ownership privately, and arrange safe returns."
+version = "1.0.0"
+id = "artifacts/findit"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 20647
+
+[services.development]
+run = "pnpm --filter @workspace/findit run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/findit", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/findit/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "20647"
+BASE_PATH = "/"

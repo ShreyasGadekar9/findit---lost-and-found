@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "export NODE_ENV=development && pnpm run build && pnpm run start",
-    "build": "node ./build.mjs",
-    "start": "node --enable-source-maps ./dist/index.mjs",
+    "dev": "cd ../../apps/findit-java && mvn spring-boot:run",
+    "build": "cd ../../apps/findit-java && mvn -q -DskipTests package",
+    "start": "cd ../../apps/findit-java && java -jar target/findit-java-api-1.0.0.jar",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {

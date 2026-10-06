@@ -1,0 +1,87 @@
+FindIt: Smart Lost-and-Found App
+1. The Core Idea
+
+A mobile app where anyone who loses something posts it, anyone who finds something posts it, and the app automatically matches the two. Once matched, the owner and finder can chat safely, verify ownership, and arrange the return, without sharing phone numbers.
+
+The key difference from existing options (WhatsApp groups, notice boards, Facebook posts) is that nobody has to scroll or search. The app does the matching and notifies the right person.
+
+2. User Flow
+
+If you lost something:
+
+Post a "Lost" report: photo (optional), category, description, last seen location on map, date/time
+Add a hidden secret detail (e.g., "scratch on the back", "wallpaper is a dog photo"), used later for verification
+Get notified instantly if a matching "Found" post exists or appears later
+
+If you found something:
+
+Post a "Found" report: photo, category, where you found it, where it is now (with you / handed to security office)
+Get notified if an owner is looking for it
+
+When there's a match:
+
+Both users see a match card with a similarity score
+The owner must answer a verification question based on the hidden detail
+If correct, a private in-app chat opens
+They agree on a handover point (suggested safe spots: security desk, college office, police station, mall help desk)
+Both confirm "Returned", the case closes, and the finder earns points
+3. Features
+
+Must-have (MVP)
+
+Sign up with phone OTP or email (Firebase Auth)
+Post Lost / Found with photos, category, and map location
+Automatic matching engine
+Push notifications on matches
+Verification step before chat opens
+In-app chat (no phone numbers shared)
+Case status: Open, Matched, Returned
+
+Smart features (these make it stand out)
+
+Image matching with AI: photos are converted to embeddings using CLIP, and similar items are matched even if descriptions differ ("black wallet" vs "dark leather purse")
+Text matching: sentence embeddings compare descriptions
+Location and time scoring: an item lost near a bus stop at 5 PM matches better with something found there at 6 PM
+Blurred sensitive photos: for IDs, cards, and documents, the app auto-blurs names and numbers using OCR so the public can't misuse them
+Heatmap: shows areas where items get lost most (useful for campuses, malls, stations)
+
+Trust and safety
+
+Ratings for finders and owners
+Report/block users
+Fake-claim protection through the verification step
+Rewards: points, badges, "Honest Finder" leaderboard, and an optional thank-you reward from the owner
+
+Extras (if time permits)
+
+Handed-in items at a "Collection Point" (college office, shops) with QR code scanning
+Auto-generate a poster of the lost item to share on WhatsApp/Instagram
+Multi-language support (English, Hindi, Marathi)
+4. How the Matching Works
+
+Each lost/found pair gets a score:
+
+Match score = 0.45 × image similarity + 0.25 × text similarity + 0.20 × location closeness + 0.10 × time closeness
+
+Image similarity: cosine similarity of CLIP embeddings
+Text similarity: cosine similarity of sentence-transformer embeddings
+Location: distance in km (closer = higher)
+Time: the found date must be after the lost date, and the gap should be small
+If the score crosses a threshold (say 0.7), notify both sides
+
+You can tune the weights using test data and report accuracy (precision/recall), which gives your project a strong measurable result.
+
+5. Architecture
+Mobile app: Flutter or React Native
+Backend: FastAPI (Python), which makes it easy to run the AI models
+Database: PostgreSQL with the pgvector extension (stores embeddings and does similarity search)
+Auth, chat, notifications: Firebase (Auth, Firestore for chat, Cloud Messaging)
+Image storage: Firebase Storage or Cloudinary
+Maps: Google Maps or OpenStreetMap (free)
+AI: CLIP (image), sentence-transformers (text), Tesseract/EasyOCR (blurring IDs)
+6. Database Tables (simplified)
+Users: id, name, phone/email, rating, points
+Items: id, user_id, type (lost/found), category, description, photo_url, embedding, location (lat/lng), timestamp, secret_hint, status
+Matches: id, lost_item_id, found_item_id, score, status
+Chats / Messages: match_id, sender, text, time
+Reports: reporter, reported_user, reason

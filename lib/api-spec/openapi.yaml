@@ -1,22 +1,24 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
+  # Do not change the title; it controls generated import paths.
   title: Api
   version: 0.1.0
-  description: API specification
+  description: FindIt lost-and-found API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
-    description: Health operations
+  - name: items
+  - name: matches
+  - name: messages
+  - name: dashboard
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
-      summary: Health check
-      description: Returns server health status
+      summary: Check API health
       responses:
         "200":
           description: Healthy
@@ -24,6 +26,177 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /dashboard:
+    get:
+      operationId: getDashboard
+      tags: [dashboard]
+      summary: Get dashboard totals and recent reports
+      responses:
+        "200":
+          description: Dashboard summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+  /items:
+    get:
+      operationId: getItems
+      tags: [items]
+      summary: List public lost and found reports
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [LOST, FOUND]
+        - name: q
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [OPEN, MATCHED, RETURNED]
+      responses:
+        "200":
+          description: Public reports; private verification details are never included
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Item"
+    post:
+      operationId: createItem
+      tags: [items]
+      summary: Report a lost or found item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReportInput"
+      responses:
+        "201":
+          description: Report created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+        "400":
+          description: Invalid report
+  /matches:
+    get:
+      operationId: getMatches
+      tags: [matches]
+      summary: List likely lost-and-found matches
+      responses:
+        "200":
+          description: Potential and verified matches
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Match"
+  /matches/{matchId}/verify:
+    post:
+      operationId: verifyMatch
+      tags: [matches]
+      summary: Verify an owner using the private detail from their lost report
+      parameters:
+        - name: matchId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VerificationInput"
+      responses:
+        "200":
+          description: Verification result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VerificationResult"
+        "404":
+          description: Match not found
+  /matches/{matchId}/messages:
+    get:
+      operationId: getMessages
+      tags: [messages]
+      summary: Read the private chat for a verified match
+      parameters:
+        - name: matchId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Chat messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Message"
+        "403":
+          description: Chat is locked until ownership is verified
+    post:
+      operationId: sendMessage
+      tags: [messages]
+      summary: Send a message in a verified match chat
+      parameters:
+        - name: matchId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MessageInput"
+      responses:
+        "201":
+          description: Message sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+        "403":
+          description: Chat is locked until ownership is verified
+  /matches/{matchId}/confirm-return:
+    post:
+      operationId: confirmReturn
+      tags: [matches]
+      summary: Confirm an item was returned
+      parameters:
+        - name: matchId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReturnConfirmationInput"
+      responses:
+        "200":
+          description: Updated match status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Match"
 components:
   schemas:
     HealthStatus:
@@ -31,6 +204,89 @@ components:
       properties:
         status:
           type: string
-      required:
-        - status
-
+      required: [status]
+    Item:
+      type: object
+      required: [id, type, reporter, title, category, description, location, itemDate, status, createdAt]
+      properties:
+        id: { type: integer }
+        type: { type: string, enum: [LOST, FOUND] }
+        reporter: { type: string }
+        title: { type: string }
+        category: { type: string }
+        description: { type: string }
+        location: { type: string }
+        itemDate: { type: string, description: ISO calendar date or ISO date-time }
+        photoUrl: { type: ["string", "null"] }
+        status: { type: string, enum: [OPEN, MATCHED, RETURNED] }
+        createdAt: { type: string, format: date-time }
+    ReportInput:
+      type: object
+      required: [type, reporter, title, category, description, location, itemDate, privateDetail]
+      properties:
+        type: { type: string, enum: [LOST, FOUND] }
+        reporter: { type: string, minLength: 1, maxLength: 100 }
+        title: { type: string, minLength: 2, maxLength: 140 }
+        category: { type: string, minLength: 1, maxLength: 64 }
+        description: { type: string, minLength: 4, maxLength: 1000 }
+        location: { type: string, minLength: 2, maxLength: 180 }
+        itemDate: { type: string, format: date-time }
+        photoUrl: { type: ["string", "null"], maxLength: 500 }
+        privateDetail: { type: string, minLength: 2, maxLength: 180, writeOnly: true }
+    Match:
+      type: object
+      required: [id, lostItem, foundItem, score, status, verified, lostConfirmed, foundConfirmed, createdAt]
+      properties:
+        id: { type: integer }
+        lostItem: { $ref: "#/components/schemas/Item" }
+        foundItem: { $ref: "#/components/schemas/Item" }
+        score: { type: number }
+        status: { type: string, enum: [POTENTIAL, VERIFIED, RETURNED] }
+        verified: { type: boolean }
+        lostConfirmed: { type: boolean }
+        foundConfirmed: { type: boolean }
+        createdAt: { type: string, format: date-time }
+    VerificationInput:
+      type: object
+      required: [privateDetail]
+      properties:
+        privateDetail: { type: string, minLength: 1, maxLength: 180 }
+    VerificationResult:
+      type: object
+      required: [verified, message, match]
+      properties:
+        verified: { type: boolean }
+        message: { type: string }
+        match: { $ref: "#/components/schemas/Match" }
+    Message:
+      type: object
+      required: [id, matchId, role, senderName, text, sentAt]
+      properties:
+        id: { type: integer }
+        matchId: { type: integer }
+        role: { type: string, enum: [OWNER, FINDER] }
+        senderName: { type: string }
+        text: { type: string }
+        sentAt: { type: string, format: date-time }
+    MessageInput:
+      type: object
+      required: [role, senderName, text]
+      properties:
+        role: { type: string, enum: [OWNER, FINDER] }
+        senderName: { type: string, minLength: 1, maxLength: 100 }
+        text: { type: string, minLength: 1, maxLength: 1000 }
+    ReturnConfirmationInput:
+      type: object
+      required: [role]
+      properties:
+        role: { type: string, enum: [OWNER, FINDER] }
+    DashboardSummary:
+      type: object
+      required: [totalReports, lostReports, foundReports, openReports, potentialMatches, returnedItems]
+      properties:
+        totalReports: { type: integer }
+        lostReports: { type: integer }
+        foundReports: { type: integer }
+        openReports: { type: integer }
+        potentialMatches: { type: integer }
+        returnedItems: { type: integer }
