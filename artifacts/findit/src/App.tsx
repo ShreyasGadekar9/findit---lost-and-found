@@ -118,8 +118,8 @@ function HomePage() {
   const matchesQuery = useGetMatches();
   const recent = useMemo(() => (itemsQuery.data ?? []).slice(0, 3), [itemsQuery.data]);
   return <div className="page-enter">
-    <section className="hero">
-      <div className="hero-copy">
+    <section className="hero home-hero">
+      <div className="hero-copy home-hero-copy">
         <span className="eyebrow"><span className="eyebrow-line" /> A community that looks out for you</span>
         <h1>Lost something?<br /><em>Let’s bring it home.</em></h1>
         <p>Small things matter. FindIt connects the people who’ve misplaced something with the kind people who’ve found it.</p>
@@ -129,12 +129,57 @@ function HomePage() {
         </div>
         <div className="privacy-note"><ShieldCheck size={16} /><span>Your contact details are never shown publicly.</span></div>
       </div>
-      <div className="hero-art" aria-label="Illustration of a found key">
-        <div className="art-corner art-corner-top" /><div className="art-corner art-corner-bottom" />
-        <div className="orbit orbit-one" /><div className="orbit orbit-two" />
-        <div className="art-sun" /><div className="art-key"><div className="key-ring" /><div className="key-stem" /><div className="key-tooth" /></div>
-        <div className="art-caption"><span className="caption-dot" /><span>Little things find their way.</span></div>
-        <div className="art-stamp">RETURN<br />WITH<br />CARE</div>
+      <div className="hero-key-stage" role="img" aria-label="A softly illuminated key, a small reminder that lost things can find their way home.">
+        <div className="key-stage-word" aria-hidden="true">HOME</div>
+        <div className="key-stage-index"><span>F / 01</span><span>FOUND, TOGETHER</span></div>
+        <div
+          className="key-interaction"
+          onPointerMove={event => {
+            if (event.pointerType !== 'mouse' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            const bounds = event.currentTarget.getBoundingClientRect();
+            const x = (event.clientX - bounds.left) / bounds.width - 0.5;
+            const y = (event.clientY - bounds.top) / bounds.height - 0.5;
+            event.currentTarget.style.setProperty('--key-tilt-x', `${(-y * 12).toFixed(2)}deg`);
+            event.currentTarget.style.setProperty('--key-tilt-y', `${(x * 14).toFixed(2)}deg`);
+          }}
+          onPointerLeave={event => {
+            event.currentTarget.style.setProperty('--key-tilt-x', '0deg');
+            event.currentTarget.style.setProperty('--key-tilt-y', '0deg');
+          }}
+          data-testid="hero-key"
+        >
+          <div className="key-float" aria-hidden="true">
+            <div className="key-tilt">
+              <svg className="hero-key-svg" viewBox="0 0 220 470" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="key-metal" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stopColor="#f1d5a6" />
+                    <stop offset=".28" stopColor="#c8905d" />
+                    <stop offset=".56" stopColor="#e4b778" />
+                    <stop offset="1" stopColor="#79543a" />
+                  </linearGradient>
+                  <linearGradient id="key-edge" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0" stopColor="#fff1d2" stopOpacity=".72" />
+                    <stop offset=".22" stopColor="#fff1d2" stopOpacity="0" />
+                    <stop offset=".78" stopColor="#553920" stopOpacity=".5" />
+                    <stop offset="1" stopColor="#fff1d2" stopOpacity=".18" />
+                  </linearGradient>
+                </defs>
+                <g fill="url(#key-metal)" stroke="url(#key-edge)" strokeWidth="2">
+                  <path fillRule="evenodd" d="M110 18a75 75 0 1 0 0 150 75 75 0 0 0 0-150Zm0 28a47 47 0 1 1 0 94 47 47 0 0 1 0-94Z" />
+                  <path d="M92 160h36v211h-36z" />
+                  <path d="M91 330h82v34h-48v45h-36v-79Z" />
+                  <path d="M91 399h56v32h-56z" />
+                </g>
+                <path d="M99 175v178m0 20v26" stroke="#fff0d1" strokeOpacity=".3" strokeWidth="3" />
+                <circle cx="110" cy="93" r="62" fill="none" stroke="#fff0d1" strokeOpacity=".12" strokeWidth="2" />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div className="key-stage-caption"><span className="caption-dot" />Little things find their way.</div>
+        <span className="key-stage-orbit orbit-a" aria-hidden="true" />
+        <span className="key-stage-orbit orbit-b" aria-hidden="true" />
       </div>
     </section>
     <section className="stats-strip" aria-label="FindIt community activity">
