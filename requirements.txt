@@ -1,0 +1,3 @@
+# FindIt Lost & Found Platform
+# This project uses Python's standard library (http.server, sqlite3, hashlib, etc.)
+# No external pip dependencies are required to run serve.py.

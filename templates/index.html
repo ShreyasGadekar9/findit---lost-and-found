@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frontend Animation Showcase — Lost & Found</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: #06070a;
+      color: #fff;
+      font-family: 'Barlow', sans-serif;
+    }
+    .liquid-card {
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.15);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .liquid-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 20px 40px -15px rgba(0,0,0,0.7), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between p-6 md:p-12">
+  <header class="max-w-5xl mx-auto w-full pt-6 pb-12">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-white/10 text-neutral-300 border border-white/10 mb-4">
+      Lost & Found • Reference Templates
+    </div>
+    <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-white mb-4">
+      Frontend Animation Showcase
+    </h1>
+    <p class="text-neutral-400 text-lg max-w-2xl leading-relaxed">
+      Explore the standalone prototypes built from your reference prompts. Test the 3D physics, glass refraction shaders, video crossfades, and liquid-glass design systems.
+    </p>
+  </header>
+
+  <main class="max-w-5xl mx-auto w-full flex flex-col gap-8 my-auto">
+    <!-- Featured Full Animated Website -->
+    <a href="../index.html" class="liquid-card rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between group block text-left border-2 border-amber-300/30 bg-amber-500/[0.03]">
+      <div class="max-w-xl">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="text-xs font-mono px-3 py-1 rounded-full bg-amber-400/20 text-amber-200 border border-amber-300/30 font-semibold">Featured Live App</span>
+        </div>
+        <h2 class="text-3xl font-bold text-white mb-2 group-hover:text-amber-200 transition-colors">
+          FindIt — Fully Animated Smart Lost & Found
+        </h2>
+        <p class="text-neutral-300 text-sm leading-relaxed mb-4">
+          Integrated experience featuring 3D Three.js glass chromatic refraction, 3D golden skeleton key physics, AI Neural Matching Radar, live interactive tactical heatmap, OCR Document Privacy Shield, Honest Finder Leaderboard, and instant social flyer generator.
+        </p>
+        <div class="flex flex-wrap gap-2">
+          <span class="text-xs px-2.5 py-1 rounded bg-neutral-900 text-amber-200 border border-amber-300/30">Three.js r169 3D Hero</span>
+          <span class="text-xs px-2.5 py-1 rounded bg-neutral-900 text-neutral-300 border border-neutral-800">AI Vector Radar</span>
+          <span class="text-xs px-2.5 py-1 rounded bg-neutral-900 text-neutral-300 border border-neutral-800">Tactical Heatmap</span>
+          <span class="text-xs px-2.5 py-1 rounded bg-neutral-900 text-neutral-300 border border-neutral-800">OCR Privacy Shield</span>
+        </div>
+      </div>
+      <div class="mt-6 md:mt-0 flex items-center gap-3">
+        <span class="px-5 py-2.5 rounded-full bg-white text-black font-semibold text-xs group-hover:scale-105 transition-transform flex items-center gap-2">
+          <span>Open Main Website</span>
+          <span>→</span>
+        </span>
+      </div>
+    </a>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Template 1 -->
+      <a href="./template-1-glass-cube.html" class="liquid-card rounded-2xl p-8 flex flex-col justify-between group block text-left">
+      <div>
+        <div class="flex items-center justify-between mb-6">
+          <span class="text-xs font-mono px-3 py-1 rounded-full bg-white/10 text-white/90">Prompt 1</span>
+          <span class="text-neutral-400 group-hover:text-white group-hover:translate-x-1 transition-all">↗</span>
+        </div>
+        <h2 class="text-2xl font-bold text-white mb-2 group-hover:text-indigo-300 transition-colors">
+          3D Refractive Glass Cuboid
+        </h2>
+        <p class="text-neutral-400 text-sm leading-relaxed mb-6">
+          Full-screen Three.js WebGL scene with a rotatable 3D rounded glass cuboid, dual-pass 6-band chromatic dispersion shader, offscreen 2D canvas text refraction, and drag-and-spin inertia physics.
+        </p>
+      </div>
+      <div class="flex flex-wrap gap-2 pt-4 border-t border-white/10">
+        <span class="text-xs px-2.5 py-1 rounded bg-neutral-900 text-neutral-300 border border-neutral-800">Three.js r169</span>
+        <span class="text-xs px-2.5 py-1 rounded bg-neutral-900 text-neutral-300 border border-neutral-800">Chromatic Dispersion</span>
+        <span class="text-xs px-2.5 py-1 rounded bg-neutral-900 text-neutral-300 border border-neutral-800">Inertia Physics</span>
+      </div>
+    </a>
+
+    <!-- Template 2 -->
+    <a href="./template-2-cinematic-space.html" class="liquid-card rounded-2xl p-8 flex flex-col justify-between group block text-left">
+      <div>
+        <div class="flex items-center justify-between mb-6">
+          <span class="text-xs font-mono px-3 py-1 rounded-full bg-white/10 text-white/90">Prompt 2</span>
+          <span class="text-neutral-400 group-hover:text-white group-hover:translate-x-1 transition-all">↗</span>
+        </div>
+        <h2 class="text-2xl font-bold text-white mb-2 group-hover:text-indigo-300 transition-colors">
+          Cinematic Space & Liquid Glass
+        </h2>
+        <p class="text-neutral-400 text-sm leading-relaxed mb-6">
+          React + Framer Motion landing page with custom requestAnimationFrame looping video crossfade, liquid-glass frosted design system, BlurText word animation, and interactive capability cards.
+        </p>
+      </div>
+      <div class="flex flex-wrap gap-2 pt-4 border-t border-white/10">
+        <span class="text-xs px-2.5 py-1 rounded bg-neutral-900 text-neutral-300 border border-neutral-800">React 18</span>
+        <span class="text-xs px-2.5 py-1 rounded bg-neutral-900 text-neutral-300 border border-neutral-800">Framer Motion</span>
+        <span class="text-xs px-2.5 py-1 rounded bg-neutral-900 text-neutral-300 border border-neutral-800">Liquid-Glass Blur</span>
+      </div>
+    </a>
+    </div>
+  </main>
+
+  <footer class="max-w-5xl mx-auto w-full pt-12 pb-6 flex items-center justify-between text-xs text-neutral-500 border-t border-neutral-900">
+    <span>Stored locally at <code>S:\IT\Lost and Found\templates\</code></span>
+    <span>Ready for Template 3 or FindIt Frontend Integration</span>
+  </footer>
+</body>
+</html>

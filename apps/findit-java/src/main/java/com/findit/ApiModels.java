@@ -58,6 +58,32 @@ public final class ApiModels {
       int returnedItems
   ) {}
 
+  public record SignupInput(
+      String fullName,
+      String email,
+      String password,
+      String confirmPassword
+  ) {}
+
+  public record LoginInput(
+      String email,
+      String password
+  ) {}
+
+  public record AuthResponse(
+      int id,
+      String fullName,
+      String email,
+      String token
+  ) {}
+
+  public record UserProfile(
+      int id,
+      String fullName,
+      String email,
+      String createdAt
+  ) {}
+
   public record HealthStatus(String status) {}
   public record ErrorResponse(String error) {}
 }
