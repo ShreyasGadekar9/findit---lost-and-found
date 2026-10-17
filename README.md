@@ -2,6 +2,13 @@
 
 > **Connecting lost items with verified owners through automated matching and private safe channels.**
 
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://findit-lost-and-found-avjl.onrender.com/)
+[![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![Three.js](https://img.shields.io/badge/Three.js-r169-black?style=for-the-badge&logo=threedotjs&logoColor=white)](https://threejs.org)
+[![Security](https://img.shields.io/badge/Security-OWASP_Hardened-success?style=for-the-badge&logo=shield)](https://owasp.org)
+
+**🔗 Live Website:** [https://findit-lost-and-found-avjl.onrender.com/](https://findit-lost-and-found-avjl.onrender.com/)
+
 FindIt is an intelligent Lost & Found platform designed to eliminate public phone number sharing and prevent fraudulent claims. Built with an automated NLP-based similarity matcher and zero-knowledge ownership verification, it ensures that belongings are safely reunited with their rightful owners.
 
 ---
@@ -20,8 +27,9 @@ FindIt is an intelligent Lost & Found platform designed to eliminate public phon
 ## 🛠️ Tech Stack
 
 * **Backend**: Python 3, `ThreadingHTTPServer`, SQLite with WAL mode, PBKDF2 Password Hashing, REST API
-* **Frontend**: Vanilla JavaScript (ES6+), Three.js, Tailwind CSS, Lucide Icons
+* **Frontend**: Vanilla JavaScript (ES6+), Three.js (r169), Tailwind CSS, Lucide Icons
 * **Security**: OWASP Stored XSS defense, Brute-Force Rate Limiting, HTTP Security Headers (`nosniff`, `SAMEORIGIN`, `Referrer-Policy`), Token-based Auth
+* **Deployment**: Hosted on Render with automated HTTPS/SSL encryption
 
 ---
 
@@ -29,8 +37,8 @@ FindIt is an intelligent Lost & Found platform designed to eliminate public phon
 
 1. **Clone the repository:**
    ```bash
-   git clone <your-repo-url>
-   cd <repo-folder>
+   git clone https://github.com/ShreyasGadekar9/findit---lost-and-found.git
+   cd findit---lost-and-found
    ```
 
 2. **Start the server:**
@@ -50,4 +58,5 @@ FindIt is an intelligent Lost & Found platform designed to eliminate public phon
 
 * **XSS Defense**: Strict input sanitization via HTML entity escaping on all user-submitted fields before DOM injection.
 * **Endpoint Protection**: `GET /api/matches/{id}/messages` and chat posting return `403 Forbidden` if ownership is not verified.
+* **Brute-Force Lockout**: 5 failed verification attempts triggers an automatic 24-hour security lockout (`429 Too Many Requests`).
 * **Session Lifecycle**: Auth tokens enforce a 7-day TTL with database cleanup; token query parameters in URLs are prohibited to prevent referer leakage.
